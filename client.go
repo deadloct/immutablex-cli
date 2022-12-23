@@ -41,8 +41,6 @@ func (c *Client) GetAssets(
 	cursor string,
 ) ([]api.AssetWithOrders, error) {
 
-	log.Printf("fetching %d more assets\n", MaxAssetsPerReq)
-
 	req := c.imxClient.NewListAssetsRequest(ctx).
 		Collection(addr).
 		Cursor(cursor).
@@ -50,18 +48,15 @@ func (c *Client) GetAssets(
 		OrderBy("updated_at")
 
 	if before != "" {
-		log.Printf("fetching starting at %v...", before)
 		req = req.UpdatedMaxTimestamp(before)
 	}
 
 	resp, err := c.imxClient.ListAssets(&req)
 	if err != nil {
-		log.Printf("failed to get assets for addr %s: %v", addr, err)
 		return nil, err
 	}
 
 	if len(resp.Result) == 0 {
-		log.Println("no assets in this batch")
 		return assets, nil
 	}
 
@@ -72,13 +67,11 @@ func (c *Client) GetAssets(
 	log.Printf("fetched %v assets from %v to %v\n", len(resp.Result), first, last)
 
 	if resp.Remaining > 0 {
-		log.Println("fetching more asset pages...")
 		return c.GetAssets(ctx, addr, before, assets, resp.Cursor)
 	}
 
 	// Attempt to fetch earlier assets
 	if len(resp.Result) > 0 {
-		log.Printf("attempting to fetch records older than %v...\n", last)
 		return c.GetAssets(ctx, addr, last, assets, resp.Cursor)
 	}
 
