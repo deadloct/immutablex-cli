@@ -66,7 +66,6 @@ func (c *Client) GetAssets(ctx context.Context, addr string, assets []api.AssetW
 		Cursor(cursor).
 		PageSize(MaxAssetsPerReq).
 		OrderBy("updated_at")
-
 	resp, err := c.imxClient.ListAssets(&req)
 
 	if err != nil {
@@ -79,11 +78,9 @@ func (c *Client) GetAssets(ctx context.Context, addr string, assets []api.AssetW
 	log.Printf("fetched %v assets from %v to %v\n", len(resp.Result), first, last)
 
 	assets = append(assets, resp.Result...)
-	cursor = resp.Cursor
-
 	if resp.Remaining > 0 {
 		log.Printf("fetching more asset pages (%v)...", resp.Remaining)
-		return c.GetAssets(ctx, addr, assets, cursor)
+		return c.GetAssets(ctx, addr, assets, resp.Cursor)
 	}
 
 	return assets, nil
