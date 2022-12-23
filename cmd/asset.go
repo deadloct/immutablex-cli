@@ -47,7 +47,6 @@ func runAssetCMD(cmd *cobra.Command, args []string) {
 func init() {
 	rootCmd.AddCommand(assetCmd)
 	assetCmd.Flags().StringVarP(&assetType, "type", "t", "hero", "Type")
-	assetCmd.MarkFlagRequired("type")
 	assetCmd.Flags().StringVarP(&id, "id", "i", "", "")
 	assetCmd.MarkFlagRequired("id")
 }
