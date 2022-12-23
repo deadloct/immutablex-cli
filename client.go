@@ -33,34 +33,6 @@ func (c *Client) Stop() {
 	c.imxClient.EthClient.Close()
 }
 
-func (c *Client) PrintAssetCounts(ctx context.Context, addr string) {
-	assets, err := c.GetAssets(ctx, addr, "", nil, "")
-	if err != nil {
-		log.Printf("failed to get assets: %v\n", err)
-		return
-	}
-
-	var total int
-	rarityCounts := make(map[string]int, 4)
-	for _, asset := range assets {
-		rarity, ok := asset.Metadata["Rarity"].(string)
-		if !ok {
-			log.Printf("failed to find rarity for asset %#v", asset)
-			continue
-		}
-
-		if asset.Name.IsSet() {
-			rarityCounts[rarity]++
-			total++
-		} else {
-			log.Println("asset skipped since it has no name and must be messed up")
-		}
-	}
-
-	log.Printf("Rarities for collection %s: %#v\n", addr, rarityCounts)
-	log.Printf("Total for collection: %d\n", total)
-}
-
 func (c *Client) GetAssets(
 	ctx context.Context,
 	addr string,
