@@ -49,7 +49,7 @@ func runAssetsCMD(cmd *cobra.Command, args []string) {
 		filtered := assetManager.FilterAssets(assets, &collectionFilter)
 
 		if verbose {
-			assetManager.PrintAssets(filtered)
+			assetManager.PrintAssets(collection.Addr, filtered)
 		}
 
 		assetManager.PrintAssetCounts(collection.Name, filtered)
