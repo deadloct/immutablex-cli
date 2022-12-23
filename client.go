@@ -1,8 +1,9 @@
 package main
 
 import (
-	"context"
 	"log"
+	"os"
+	"sync"
 
 	"github.com/immutable/imx-core-sdk-golang/imx"
 	"github.com/immutable/imx-core-sdk-golang/imx/api"
@@ -10,97 +11,72 @@ import (
 
 const MaxAssetsPerReq = 200
 
-type Client struct {
-	imxClient *imx.Client
+var AlchemyKey string
+
+func init() {
+	AlchemyKey = os.Getenv("ALCHEMY_API_KEY")
+	if AlchemyKey == "" {
+		log.Panic("no alchemy api key provided, get one at alchemy.com")
+	}
 }
 
-func NewClient(alchemyKey string) (*Client, error) {
+type IMXClientWrapper interface {
+	Start() error
+	Stop()
+	GetClient() *imx.Client
+}
+
+type Client struct {
+	key       string
+	imxClient *imx.Client
+
+	sync.Mutex
+}
+
+func NewClient() *Client {
+	return &Client{key: AlchemyKey}
+}
+
+func (c *Client) Start() error {
+	if c.imxClient != nil {
+		return nil
+	}
+
 	cfg := imx.Config{
-		AlchemyAPIKey: alchemyKey,
+		AlchemyAPIKey: c.key,
 		APIConfig:     api.NewConfiguration(),
 		Environment:   imx.Mainnet,
 	}
 
-	c, err := imx.NewClient(&cfg)
+	client, err := imx.NewClient(&cfg)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return &Client{imxClient: c}, nil
+	if client != nil {
+		c.Lock()
+		c.imxClient = client
+		c.Unlock()
+	}
+
+	return nil
 }
 
 func (c *Client) Stop() {
+	c.Lock()
+	defer c.Unlock()
+
+	if c.imxClient == nil {
+		return
+	}
+
 	c.imxClient.EthClient.Close()
+	c.imxClient = nil
 }
 
-func (c *Client) GetAsset(ctx context.Context, collectionAddr, id string) (*api.Asset, error) {
-	includeFees := false
-	return c.imxClient.GetAsset(ctx, collectionAddr, id, &includeFees)
-}
+func (c *Client) GetClient() *imx.Client {
+	c.Lock()
+	defer c.Unlock()
 
-type GetAssetsRequest struct {
-	Assets          []api.AssetWithOrders
-	Before          string
-	CollectionAddr  string
-	Cursor          string
-	MetadataFilters map[string]string
-}
-
-func (c *Client) GetAssets(
-	ctx context.Context,
-	cfg *GetAssetsRequest,
-) ([]api.AssetWithOrders, error) {
-
-	req := c.imxClient.NewListAssetsRequest(ctx).
-		Collection(cfg.CollectionAddr).
-		PageSize(MaxAssetsPerReq).
-		OrderBy("updated_at")
-
-	if cfg.Before != "" {
-		req = req.UpdatedMaxTimestamp(cfg.Before)
-	}
-
-	if cfg.Cursor != "" {
-		req = req.Cursor(cfg.Cursor)
-	}
-
-	if cfg.MetadataFilters != nil {
-		log.Printf("skipping metadata since it is not currently supported")
-
-		// The api doesn't like this with { "Rarity": "Legendary" }
-		// metadata, err := json.Marshal(cfg.MetadataFilters)
-		// if err != nil {
-		// 	log.Printf("skipping metadata since it cannot be serialized")
-		// } else {
-		// 	req = req.Metadata(url.QueryEscape(string(metadata)))
-		// }
-	}
-
-	resp, err := c.imxClient.ListAssets(&req)
-	if err != nil {
-		return nil, err
-	}
-
-	if len(resp.Result) == 0 {
-		return cfg.Assets, nil
-	}
-
-	cfg.Assets = append(cfg.Assets, resp.Result...)
-	cfg.Cursor = resp.Cursor
-
-	first := *resp.Result[0].UpdatedAt.Get()
-	last := *resp.Result[len(resp.Result)-1].UpdatedAt.Get()
-	log.Printf("fetched %v assets from %v to %v\n", len(resp.Result), first, last)
-
-	if resp.Remaining > 0 {
-		return c.GetAssets(ctx, cfg)
-	}
-
-	// Attempt to fetch earlier assets
-	if len(resp.Result) > 0 {
-		cfg.Before = last
-		return c.GetAssets(ctx, cfg)
-	}
-
-	return cfg.Assets, nil
+	return c.imxClient
 }
