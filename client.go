@@ -33,16 +33,21 @@ func (c *Client) Stop() {
 	c.imxClient.EthClient.Close()
 }
 
+func (c *Client) GetAsset(ctx context.Context, collectionAddr, id string) (*api.Asset, error) {
+	includeFees := true
+	return c.imxClient.GetAsset(ctx, collectionAddr, id, &includeFees)
+}
+
 func (c *Client) GetAssets(
 	ctx context.Context,
-	addr string,
+	collectionAddr string,
 	before string,
 	assets []api.AssetWithOrders,
 	cursor string,
 ) ([]api.AssetWithOrders, error) {
 
 	req := c.imxClient.NewListAssetsRequest(ctx).
-		Collection(addr).
+		Collection(collectionAddr).
 		Cursor(cursor).
 		PageSize(MaxAssetsPerReq).
 		OrderBy("updated_at")
@@ -67,12 +72,12 @@ func (c *Client) GetAssets(
 	log.Printf("fetched %v assets from %v to %v\n", len(resp.Result), first, last)
 
 	if resp.Remaining > 0 {
-		return c.GetAssets(ctx, addr, before, assets, resp.Cursor)
+		return c.GetAssets(ctx, collectionAddr, before, assets, resp.Cursor)
 	}
 
 	// Attempt to fetch earlier assets
 	if len(resp.Result) > 0 {
-		return c.GetAssets(ctx, addr, last, assets, resp.Cursor)
+		return c.GetAssets(ctx, collectionAddr, last, assets, resp.Cursor)
 	}
 
 	return assets, nil

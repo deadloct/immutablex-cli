@@ -2,11 +2,31 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"os"
 )
 
-var AlchemyKey string
+type Collection struct {
+	Name string
+	Addr string
+}
+
+var (
+	AlchemyKey  string
+	Collections = map[string]Collection{
+		"portal": {
+			Name: "BitVerse Portals",
+			Addr: "0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291",
+		},
+		"hero": {
+			Name: "BitVerse Heroes",
+			Addr: "0x6465ef3009f3c474774f4afb607a5d600ea71d95",
+		},
+	}
+
+	client *Client
+)
 
 func init() {
 	AlchemyKey = os.Getenv("ALCHEMY_API_KEY")
@@ -15,17 +35,13 @@ func init() {
 	}
 }
 
-func printAssetCounts(client *Client) {
-	addrs := map[string]string{
-		"BitVerse Portals": "0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291",
-		"BitVerse Heroes":  "0x6465ef3009f3c474774f4afb607a5d600ea71d95",
-	}
+func printAssetCounts() {
 
-	for name, addr := range addrs {
-		assets, err := client.GetAssets(context.Background(), addr, "", nil, "")
+	for _, collection := range Collections {
+		assets, err := client.GetAssets(context.Background(), collection.Addr, "", nil, "")
 		if err != nil {
-			log.Printf("failed to get assets: %v\n", err)
-			return
+			fmt.Printf("failed to get assets: %v\n", err)
+			continue
 		}
 
 		counts := make(map[string]int, 4)
@@ -44,18 +60,57 @@ func printAssetCounts(client *Client) {
 			counts["Total"]++
 		}
 
-		log.Printf("\n\n%s:\n- Common: %d\n- Rare: %d\n- Epic: %d\n- Legendary: %d\n- Mythic: %d\n- Total: %d\n\n",
-			name, counts["Common"], counts["Rare"], counts["Epic"], counts["Legendary"], counts["Mythic"], counts["Total"])
+		fmt.Printf("%s:\n- Common: %d\n- Rare: %d\n- Epic: %d\n- Legendary: %d\n- Mythic: %d\n- Total: %d\n\n",
+			collection.Name, counts["Common"], counts["Rare"], counts["Epic"], counts["Legendary"], counts["Mythic"], counts["Total"])
 	}
 }
 
+func printAssetInformation(collectionType, id string) {
+	addr := Collections[collectionType].Addr
+	asset, err := client.GetAsset(context.Background(), addr, id)
+	if err != nil {
+		fmt.Printf("failed to retrieve asset: %v", err)
+		os.Exit(1)
+	}
+
+	fmt.Printf("%#v\n", asset)
+}
+
+func usage() {
+	fmt.Printf("Usage: %s [option], where options are:\n\tassets\t(print all assets)\n\tasset portal|hero id\t(display information about an NFT)\n", os.Args[0])
+	os.Exit(1)
+}
+
 func main() {
-	c, err := NewClient(AlchemyKey)
+	if len(os.Args) < 2 {
+		usage()
+	}
+
+	var err error
+	client, err = NewClient(AlchemyKey)
 	if err != nil {
 		log.Panic(err)
 	}
 
-	defer c.Stop()
+	defer client.Stop()
 
-	printAssetCounts(c)
+	switch os.Args[1] {
+	case "assets":
+		printAssetCounts()
+
+	case "asset":
+		if len(os.Args) < 4 {
+			usage()
+		}
+
+		collectionType := os.Args[2]
+		if collectionType != "hero" && collectionType != "portal" {
+			usage()
+		}
+
+		printAssetInformation(collectionType, os.Args[3])
+
+	default:
+		fmt.Printf("invalid command line option '%s'", os.Args[1])
+	}
 }
