@@ -34,7 +34,7 @@ func (c *Client) Stop() {
 }
 
 func (c *Client) GetAsset(ctx context.Context, collectionAddr, id string) (*api.Asset, error) {
-	includeFees := true
+	includeFees := false
 	return c.imxClient.GetAsset(ctx, collectionAddr, id, &includeFees)
 }
 

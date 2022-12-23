@@ -60,8 +60,7 @@ func printAssetCounts() {
 			counts["Total"]++
 		}
 
-		fmt.Printf("%s:\n- Common: %d\n- Rare: %d\n- Epic: %d\n- Legendary: %d\n- Mythic: %d\n- Total: %d\n\n",
-			collection.Name, counts["Common"], counts["Rare"], counts["Epic"], counts["Legendary"], counts["Mythic"], counts["Total"])
+		fmt.Print(FormatAssetCounts(collection.Name, counts))
 	}
 }
 
@@ -73,7 +72,7 @@ func printAssetInformation(collectionType, id string) {
 		os.Exit(1)
 	}
 
-	fmt.Printf("%#v\n", asset)
+	fmt.Println(FormatAssetInfo(asset))
 }
 
 func usage() {
