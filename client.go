@@ -8,17 +8,7 @@ import (
 	"github.com/immutable/imx-core-sdk-golang/imx/api"
 )
 
-type Rarity string
-
-const (
-	MaxAssetsPerReq = 200
-
-	RarityCommon    Rarity = "Common"
-	RarityRare      Rarity = "Rare"
-	RarityEpic      Rarity = "Epic"
-	RarityLegendary Rarity = "Legendary"
-	RarityMythic    Rarity = "Mythic"
-)
+const MaxAssetsPerReq = 200
 
 type Client struct {
 	imxClient *imx.Client
