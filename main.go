@@ -36,9 +36,9 @@ func init() {
 }
 
 func printAssetCounts() {
-
 	for _, collection := range Collections {
-		assets, err := client.GetAssets(context.Background(), collection.Addr, "", nil, "")
+		assets, err := client.GetAssets(context.Background(),
+			&GetAssetsRequest{CollectionAddr: collection.Addr})
 		if err != nil {
 			fmt.Printf("failed to get assets: %v\n", err)
 			continue
