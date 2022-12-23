@@ -39,7 +39,7 @@ Asset will retrive the given asset. The `id` field is required.
 For example, to retrieve one of the mythic heroes:
 
 ```bash
-% ./bh-imx-browser asset --type hero --id 2578
+% ./bh-imx-browser asset --id 2578
 
 BitHero #2578:
 - Background: Peekaboo Plant
@@ -54,8 +54,8 @@ BitHero #2578:
 - Skin: Color Tone 6
 - Description: BitHeroes from the Bitverse
 - Image URL: https://d3n9vm398ay3ts.cloudfront.net/heroes-2022/0/images/hero-2578.gif
-- Game Meta JSON: https://immutascan.io/address/0x1f67800e5aee081b53b7c0f5ac5d33f23e6d1252
-- Owner: https://d3n9vm398ay3ts.cloudfront.net/heroes-2022/0/game_meta/hero-2578.json
+- Game Meta JSON: https://d3n9vm398ay3ts.cloudfront.net/heroes-2022/0/game_meta/hero-2578.json
+- Owner: https://immutascan.io/address/0x1f67800e5aee081b53b7c0f5ac5d33f23e6d1252
 ```
 
 ### Assets
