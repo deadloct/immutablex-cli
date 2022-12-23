@@ -7,7 +7,14 @@ It's still being actively developed (consider it alpha), but for now, here's how
 
 ## Installation 
 
-First clone the repo and build it:
+Prerequisites:
+
+* Go [go.dev](https://go.dev/)
+* An Alchemy API Key from [alchemy.com](https://alchemy.com) (it's free)
+
+First add your Alchemy API key to your environment as `ALCHEMY_API_KEY`.
+
+Next clone the repo and build it:
 
 ```bash
 % git clone git@github.com:deadloct/bh-imx-browser.git
