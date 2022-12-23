@@ -39,10 +39,11 @@ func (c *Client) GetAsset(ctx context.Context, collectionAddr, id string) (*api.
 }
 
 type GetAssetsRequest struct {
-	Assets         []api.AssetWithOrders
-	Before         string
-	CollectionAddr string
-	Cursor         string
+	Assets          []api.AssetWithOrders
+	Before          string
+	CollectionAddr  string
+	Cursor          string
+	MetadataFilters map[string]string
 }
 
 func (c *Client) GetAssets(
@@ -52,12 +53,27 @@ func (c *Client) GetAssets(
 
 	req := c.imxClient.NewListAssetsRequest(ctx).
 		Collection(cfg.CollectionAddr).
-		Cursor(cfg.Cursor).
 		PageSize(MaxAssetsPerReq).
 		OrderBy("updated_at")
 
 	if cfg.Before != "" {
 		req = req.UpdatedMaxTimestamp(cfg.Before)
+	}
+
+	if cfg.Cursor != "" {
+		req = req.Cursor(cfg.Cursor)
+	}
+
+	if cfg.MetadataFilters != nil {
+		log.Printf("skipping metadata since it is not currently supported")
+
+		// The api doesn't like this with { "Rarity": "Legendary" }
+		// metadata, err := json.Marshal(cfg.MetadataFilters)
+		// if err != nil {
+		// 	log.Printf("skipping metadata since it cannot be serialized")
+		// } else {
+		// 	req = req.Metadata(url.QueryEscape(string(metadata)))
+		// }
 	}
 
 	resp, err := c.imxClient.ListAssets(&req)
