@@ -1,31 +1,35 @@
 package main
 
 import (
+	"context"
+	"flag"
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
-var Collections = map[string]struct {
-	Name string
-	Addr string
-}{
-	"portal": {
-		Name: "BitVerse Portals",
-		Addr: "0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291",
-	},
-	"hero": {
-		Name: "BitVerse Heroes",
-		Addr: "0x6465ef3009f3c474774f4afb607a5d600ea71d95",
-	},
-}
-
 func usage() {
-	fmt.Printf("Usage: %s [option], where options are:\n\tassets\t(print all assets)\n\tasset portal|hero id\t(display information about an NFT)\n", os.Args[0])
+	fmt.Printf(`
+Usage: %s [options], where options are:
+	assets [-rarity rarity] [-owner addr] [-status imx-token-status]
+	asset -type portal|hero -id id
+`, os.Args[0])
+
 	os.Exit(1)
 }
 
 func main() {
+	assetsListCmd := flag.NewFlagSet("assets", flag.ExitOnError)
+	rarity := assetsListCmd.String("rarity", "", "Filter by rarity")
+	owner := assetsListCmd.String("owner", "", "Filter by owner")
+	status := assetsListCmd.String("status", "", "Filter by status")
+	verboseList := assetsListCmd.Bool("v", false, "Print each item in the collection")
+
+	assetCommand := flag.NewFlagSet("asset", flag.ExitOnError)
+	assetType := assetCommand.String("type", "", "Either hero or portal")
+	assetID := assetCommand.String("id", "", "The NFT ID")
+
 	if len(os.Args) < 2 {
 		usage()
 	}
@@ -38,21 +42,51 @@ func main() {
 
 	switch os.Args[1] {
 	case "assets":
+		assetsListCmd.Parse(os.Args[2:])
+		filter := &AssetFilter{
+			Owner:  *owner,
+			Rarity: AssetRarity(strings.Title(*rarity)),
+			Status: AssetStatus(*status),
+		}
+
 		for _, collection := range Collections {
-			assetManager.PrintAssetCounts(collection.Name, collection.Addr)
+			req := &GetAssetsRequest{CollectionAddr: collection.Addr}
+			assets, err := assetManager.GetAssets(context.Background(), req)
+			if err != nil {
+				fmt.Printf("error retrieving assets: %v\n", err)
+			}
+
+			collectionFilter := *filter
+			collectionFilter.CollectionAddr = collection.Addr
+			collectionFilter.CollectionName = collection.Name
+			filtered := assetManager.FilterAssets(assets, &collectionFilter)
+
+			if *verboseList {
+				assetManager.PrintAssets(filtered)
+			}
+
+			assetManager.PrintAssetCounts(collection.Name, filtered)
 		}
 
 	case "asset":
-		if len(os.Args) < 4 {
+		assetCommand.Parse(os.Args[2:])
+		if *assetType == "" || *assetID == "" {
 			usage()
 		}
 
-		collectionType := os.Args[2]
-		if collectionType != "hero" && collectionType != "portal" {
+		if *assetType != "hero" && *assetType != "portal" {
 			usage()
 		}
 
-		assetManager.PrintAsset(collectionType, os.Args[3])
+		id := *assetID
+		addr := Collections[*assetType].Addr
+		asset, err := assetManager.GetAsset(context.Background(), addr, id)
+		if err != nil {
+			fmt.Printf("failed to retrieve asset: %v", err)
+			os.Exit(1)
+		}
+
+		assetManager.PrintAsset(asset)
 
 	default:
 		fmt.Printf("invalid command line option '%s'", os.Args[1])
