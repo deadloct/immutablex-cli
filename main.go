@@ -60,7 +60,7 @@ func printAssetCounts() {
 			counts["Total"]++
 		}
 
-		fmt.Print(FormatAssetCounts(collection.Name, counts))
+		fmt.Println(FormatAssetCounts(collection.Name, counts))
 	}
 }
 

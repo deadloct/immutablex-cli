@@ -10,7 +10,6 @@ const ImmutascanURL = "https://immutascan.io/address/"
 
 func FormatAssetCounts(name string, counts map[string]int) string {
 	var str = `
-
 %s:
 - Common: %d
 - Rare: %d
@@ -18,7 +17,6 @@ func FormatAssetCounts(name string, counts map[string]int) string {
 - Legendary: %d
 - Mythic: %d
 - Total: %d
-
 `
 	return fmt.Sprintf(
 		str,
@@ -65,8 +63,8 @@ func FormatAssetInfo(asset *api.Asset) string {
 		asset.Metadata["Rarity"],
 		asset.Metadata["Skin"],
 		asset.Metadata["description"],
-		asset.Metadata["game_meta"],
 		asset.Metadata["image"],
 		ownerURL,
+		asset.Metadata["game_meta"],
 	)
 }
