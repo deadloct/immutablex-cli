@@ -1,4 +1,4 @@
-package imxapi
+package lib
 
 import (
 	"context"

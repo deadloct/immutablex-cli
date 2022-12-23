@@ -6,7 +6,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/deadloct/bh-imx-browser/imxapi"
+	"github.com/deadloct/bh-imx-browser/lib"
 	"github.com/spf13/cobra"
 )
 
@@ -23,7 +23,7 @@ var (
 )
 
 func runAssetCMD(cmd *cobra.Command, args []string) {
-	assetManager := imxapi.NewAssetManager()
+	assetManager := lib.NewAssetManager()
 	if err := assetManager.Start(); err != nil {
 		log.Panic(err)
 	}
@@ -34,7 +34,7 @@ func runAssetCMD(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	addr := imxapi.Collections[assetType].Addr
+	addr := lib.Collections[assetType].Addr
 	asset, err := assetManager.GetAsset(context.Background(), addr, id)
 	if err != nil {
 		fmt.Printf("failed to retrieve asset: %v", err)
