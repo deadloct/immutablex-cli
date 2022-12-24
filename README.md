@@ -23,7 +23,7 @@ Next clone the repo and build it:
 
 The app currently has two commands: `asset` and `assets`.
 
-### Asset 
+### Asset
 
 ```bash
 Usage:
