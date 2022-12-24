@@ -117,7 +117,7 @@ Asset counts for collection 0x6465ef3009f3c474774f4afb607a5d600ea71d95:
 
 ## Shortcuts
 
-Remembering collection addresses is tedious. If you'd rather use a shortname for a commonly used collection, copy `data/collection-shortcuts.sample.json` to some location on your computer, and then set an environment variable `IMX_SHORTCUT_LOCATION` for the full path to that file. After that you can use the shortcut in commands instead of the collection address.
+Remembering collection addresses is tedious. If you'd rather use a shortname for a commonly used collection, copy the json data at the top of `lib/collection_manager.go` to some file on your computer, and then set an environment variable `IMX_SHORTCUT_LOCATION` for the full path to that file. After that you can use the shortcut in commands instead of the collection address.
 
 For example, retrieving the specific NFT above with the shortcut `hero`:
 
