@@ -4,24 +4,28 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"strings"
 
 	"github.com/deadloct/immutablex-cli/lib"
 	"github.com/spf13/cobra"
 )
 
 var (
-	collectionAddr string
-
-	// BitVerse specific, need to make these freeform for other NFT collections
-	owner  string
-	rarity string
-	status string
+	assetsBuyOrders           bool
+	assetsCollection          string
+	assetsDirection           string
+	assetsIncludeFees         bool
+	assetsName                string
+	assetsOrderBy             string
+	assetsSellOrders          bool
+	assetsStatus              string
+	assetsUpdatedMaxTimestamp string
+	assetsUpdatedMinTimestamp string
+	assetsUser                string
 
 	assetsCmd = &cobra.Command{
 		Use:   "assets",
-		Short: "Retrieve assets (NFTs) in bulk",
-		Long:  `Retrieve assets (NFTs) with filters and in bulk from Immutable`,
+		Short: "List assets (NFTs) in bulk",
+		Long:  `Queries the ImmutableX listAssets API for details asset information, see https://docs.x.immutable.com/reference/#/operations/listAssets`,
 		Run:   runAssetsCMD,
 	}
 )
@@ -39,39 +43,61 @@ func runAssetsCMD(cmd *cobra.Command, args []string) {
 	}
 	defer collectionManager.Stop()
 
-	if shortcut := collectionManager.GetShortcutByName(collectionAddr); shortcut != nil {
-		collectionAddr = shortcut.Addr
+	if shortcut := collectionManager.GetShortcutByName(assetsCollection); shortcut != nil {
+		assetsCollection = shortcut.Addr
 	}
 
-	filter := &lib.AssetFilter{
-		Owner:  owner,
-		Rarity: lib.AssetRarity(strings.Title(rarity)),
-		Status: lib.AssetStatus(status),
+	req := &lib.GetAssetsRequest{
+		BuyOrders:           assetsBuyOrders,
+		Collection:          assetsCollection,
+		Direction:           assetsDirection,
+		IncludeFees:         assetsIncludeFees,
+		Name:                assetsName,
+		OrderBy:             assetsOrderBy,
+		SellOrders:          assetsSellOrders,
+		Status:              assetsStatus,
+		UpdatedMaxTimestamp: assetsUpdatedMaxTimestamp,
+		UpdatedMinTimestamp: assetsUpdatedMinTimestamp,
+		User:                assetsUser,
 	}
 
-	req := &lib.GetAssetsRequest{CollectionAddr: collectionAddr}
+	assetsMetadata, err := cmd.Flags().GetStringArray("metadata")
+	if err != nil {
+		log.Printf("unable to parse metadata: %v\n", err)
+	} else {
+		req.Metadata = assetsMetadata
+	}
+
 	assets, err := assetManager.GetAssets(context.Background(), req)
 	if err != nil {
-		fmt.Printf("error retrieving assets for collection %s: %v\n", collectionAddr, err)
+		fmt.Printf("error retrieving assets for collection %s: %v\n", assetsCollection, err)
 	}
-
-	collectionFilter := *filter
-	collectionFilter.CollectionAddr = collectionAddr
-	filtered := assetManager.FilterAssets(assets, &collectionFilter)
 
 	if verbose {
-		assetManager.PrintAssets(collectionAddr, filtered)
+		assetManager.PrintAssets(assetsCollection, assets)
 	}
 
-	assetManager.PrintAssetCounts(collectionAddr, filtered)
+	assetManager.PrintAssetCounts(assetsCollection, assets)
 }
 
 func init() {
 	rootCmd.AddCommand(assetsCmd)
-	assetsCmd.Flags().StringVarP(&collectionAddr, "addr", "a", "", "Address of the collection or shortcut")
-	assetsCmd.MarkFlagRequired("addr")
 
-	assetsCmd.Flags().StringVarP(&owner, "owner", "o", "", "Filter by owner")
-	assetsCmd.Flags().StringVarP(&rarity, "rarity", "r", "", "Filter by rarity")
-	assetsCmd.Flags().StringVarP(&status, "status", "s", "", "Filter by status")
+	assetsCmd.Flags().BoolVarP(&assetsBuyOrders, "buy-orders", "b", false, "Retrieve buy orders for each asset")
+	assetsCmd.Flags().StringVarP(&assetsCollection, "collection", "c", "", "Address of the collection or shortcut")
+	assetsCmd.Flags().StringVarP(&assetsDirection, "direction", "d", "", "asc|desc")
+	assetsCmd.Flags().BoolVarP(&assetsIncludeFees, "include-fees", "i", false, "Retrieves fees for each asset")
+	assetsCmd.Flags().StringArrayP("metadata", "m", nil,
+		`Filter by metadata in key=value format (repeatable). For example `+
+			`"immutable-cli assets -m Rarity=Mythic -m Generation=0. Note that metadata `+
+			`keys and values are case sensitive.`)
+	assetsCmd.Flags().StringVarP(&assetsName, "name", "n", "desc", "Search for this asset name")
+	assetsCmd.Flags().StringVarP(&assetsOrderBy, "order-by", "o", "updated_at", "updated_at|name")
+	assetsCmd.Flags().BoolVarP(&assetsSellOrders, "sell-orders", "l", false, "Retrieves sell orders for each asset")
+	assetsCmd.Flags().StringVarP(&assetsStatus, "status", "s", "", "Filter by the status: eth|imx|preparing_withdrawal|withdrawable|burned")
+	assetsCmd.Flags().StringVarP(&assetsUpdatedMaxTimestamp, "updated-max-timestamp", "x", "", "Include results on or before this time in ISO 8601 UTC format")
+	assetsCmd.Flags().StringVarP(&assetsUpdatedMinTimestamp, "updated-min-timestamp", "z", "", "Include results on or after this time in ISO 8601 UTC format")
+	assetsCmd.Flags().StringVarP(&assetsUser, "user", "u", "", "Retrieves assets owned by this user/wallet address")
+
+	assetsCmd.MarkFlagRequired("collection")
 }
