@@ -16,8 +16,8 @@ var (
 
 	assetCmd = &cobra.Command{
 		Use:   "asset",
-		Short: "Retrieve BitVerse asset information",
-		Long:  `Retrieve a specific BitVerse asset from Immutable`,
+		Short: "Retrieve asset (NFT) information",
+		Long:  `Retrieve a specific asset (NFT) from Immutable`,
 		Run:   runAssetCMD,
 	}
 )

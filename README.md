@@ -11,12 +11,13 @@ Prerequisites:
 
 First add your Alchemy API key to your environment as `ALCHEMY_API_KEY`.
 
-Next you can either clone the repo and build it, or just `go install` it:
-
-The `go install` method requires that you have a $GOPATH/bin setup already:
+Next you can either `go install` it, or clone the repo and build it:
 
 ```bash
 % go install github.com/deadloct/immutablex-cli@latest
+
+# To remove it later:
+% go clean -n -i github.com/deadloct/immutablex-cli...
 ```
 
 Clone and build method:
@@ -48,7 +49,7 @@ Global Flags:
 
 Asset will retrive the given asset. The `id` and `addr` fields are required.
 
-For example, to retrieve one of the mythic BitVerse Heroes NFTs:
+For example, to retrieve one of the mythic heroes from the BitVerse Heroes collection:
 
 ```bash
 % immutablex-cli asset -a 0x6465ef3009f3c474774f4afb607a5d600ea71d95 -i 2578

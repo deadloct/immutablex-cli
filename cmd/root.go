@@ -12,8 +12,8 @@ var (
 
 	rootCmd = &cobra.Command{
 		Use:   "immutablex-cli",
-		Short: "This app interacts with the Immutable blockchain to view BitVerse NFTs",
-		Long:  "This app interacts with the Immutable layer 2 blockchain to view BitVerse NFTs",
+		Short: "Interacts with the immutablex blockchain",
+		Long:  "Helps retrieve information from the ImmutableX layer 2 blockchain",
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.Help()
 			os.Exit(1)
