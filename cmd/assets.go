@@ -6,7 +6,7 @@ import (
 	"log"
 	"strings"
 
-	"github.com/deadloct/bh-imx-browser/lib"
+	"github.com/deadloct/immutablex-cli/lib"
 	"github.com/spf13/cobra"
 )
 

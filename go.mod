@@ -1,4 +1,4 @@
-module github.com/deadloct/bh-imx-browser
+module github.com/deadloct/immutablex-cli
 
 go 1.18
 

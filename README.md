@@ -1,4 +1,4 @@
-# bh-imx-browser
+# immutablex-cli
 
 > **_NOTE:_**  This app is a work in progress. It was previously a BitVerse NFT browser but it's being converted into a general ImmutableX command-line client.
 
@@ -14,8 +14,8 @@ First add your Alchemy API key to your environment as `ALCHEMY_API_KEY`.
 Next clone the repo and build it:
 
 ```bash
-% git clone git@github.com:deadloct/bh-imx-browser.git
-% cd bh-imx-browser
+% git clone git@github.com:deadloct/immutablex-cli.git
+% cd immutablex-cli
 % go build
 ```
 
@@ -27,7 +27,7 @@ The app currently has two commands: `asset` and `assets`.
 
 ```bash
 Usage:
-  bh-imx-browser asset [flags]
+  immutablex-cli asset [flags]
 
 Flags:
   -a, --addr string   address of the collection or shortcut
@@ -43,7 +43,7 @@ Asset will retrive the given asset. The `id` and `addr` fields are required.
 For example, to retrieve one of the mythic BitVerse Heroes NFTs:
 
 ```bash
-% ./bh-imx-browser asset -a 0x6465ef3009f3c474774f4afb607a5d600ea71d95 -i 2578
+% ./immutablex-cli asset -a 0x6465ef3009f3c474774f4afb607a5d600ea71d95 -i 2578
 2022/12/24 06:32:14 requesting asset 2578 from collection 0x6465ef3009f3c474774f4afb607a5d600ea71d95
 
 BitHero #2578:
@@ -67,7 +67,7 @@ BitHero #2578:
 
 ```bash
 Usage:
-  bh-imx-browser assets [flags]
+  immutablex-cli assets [flags]
 
 Flags:
   -a, --addr string     Address of the collection or shortcut
@@ -83,7 +83,7 @@ Global Flags:
 For example, to retrieve all mythic NFTs with their URLs (`-v`):
 
 ```bash
-% ./bh-imx-browser assets -a 0x6465ef3009f3c474774f4afb607a5d600ea71d95 -r mythic -v
+% ./immutablex-cli assets -a 0x6465ef3009f3c474774f4afb607a5d600ea71d95 -r mythic -v
 2022/12/24 06:33:03 fetched 200 assets from 2022-12-24T13:18:02.817906Z to 2022-11-30T15:29:52.931155Z
 2022/12/24 06:33:03 fetched 200 assets from 2022-11-30T15:02:10.663512Z to 2022-11-03T20:54:10.896841Z
 2022/12/24 06:33:04 fetched 200 assets from 2022-11-03T20:51:52.221243Z to 2022-09-27T13:57:14.24508Z
@@ -122,7 +122,7 @@ Remembering collection addresses is tedious. If you'd rather use a shortname for
 For example, retrieving the specific NFT above with the shortcut `hero`:
 
 ```bash
-% ./bh-imx-browser asset -a hero -i 2578
+% ./immutablex-cli asset -a hero -i 2578
 2022/12/24 06:32:14 requesting asset 2578 from collection 0x6465ef3009f3c474774f4afb607a5d600ea71d95
 
 BitHero #2578:

@@ -1,6 +1,6 @@
 package main
 
-import "github.com/deadloct/bh-imx-browser/cmd"
+import "github.com/deadloct/immutablex-cli/cmd"
 
 func main() {
 	cmd.Execute()

@@ -11,7 +11,7 @@ var (
 	verbose bool
 
 	rootCmd = &cobra.Command{
-		Use:   "bh-imx-browser",
+		Use:   "immutablex-cli",
 		Short: "This app interacts with the Immutable blockchain to view BitVerse NFTs",
 		Long:  "This app interacts with the Immutable layer 2 blockchain to view BitVerse NFTs",
 		Run: func(cmd *cobra.Command, args []string) {
