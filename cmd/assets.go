@@ -73,11 +73,8 @@ func runAssetsCMD(cmd *cobra.Command, args []string) {
 		fmt.Printf("error retrieving assets for collection %s: %v\n", assetsCollection, err)
 	}
 
-	if verbose {
-		assetManager.PrintAssets(assetsCollection, assets)
-	}
-
-	assetManager.PrintAssetCounts(assetsCollection, assets)
+	assetManager.PrintAssets(assetsCollection, assets)
+	fmt.Printf("%d total assets returned", len(assets))
 }
 
 func init() {
