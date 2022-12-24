@@ -2,7 +2,10 @@ module github.com/deadloct/bh-imx-browser
 
 go 1.18
 
-require github.com/immutable/imx-core-sdk-golang v0.2.2
+require (
+	github.com/immutable/imx-core-sdk-golang v0.2.2
+	github.com/spf13/cobra v1.6.1
+)
 
 require (
 	github.com/btcsuite/btcd/btcec/v2 v2.2.1 // indirect
@@ -16,7 +19,6 @@ require (
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/rjeczalik/notify v0.9.2 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect
-	github.com/spf13/cobra v1.6.1 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/tklauser/go-sysconf v0.3.10 // indirect
 	github.com/tklauser/numcpus v0.5.0 // indirect
