@@ -34,25 +34,26 @@ The app currently has two commands: `asset` and `assets`.
 
 ### Asset
 
+Queries the ImmutableX getAsset endpoint for detailed asset information, see [https://docs.x.immutable.com/reference/#/operations/getAsset](https://docs.x.immutable.com/reference/#/operations/getAsset).
+
 ```txt
 Usage:
   immutablex-cli asset [flags]
 
 Flags:
-  -a, --addr string   address of the collection or shortcut
-  -h, --help          help for asset
-  -i, --id string     id of the asset
+  -h, --help                   help for asset
+  -f, --include-fees           include fees associated with the asset
+  -a, --token-address string   address of the collection or shortcut
+  -i, --token-id string        id of the asset
 
 Global Flags:
   -v, --verbose   Verbose output
 ```
 
-Asset will retrive the given asset. The `id` and `addr` fields are required.
-
-For example, to retrieve one of the mythic heroes from the BitVerse Heroes collection:
+Example:
 
 ```txt
-% immutablex-cli asset -a 0x6465ef3009f3c474774f4afb607a5d600ea71d95 -i 2578
+% immutablex-cli asset --token-address 0x6465ef3009f3c474774f4afb607a5d600ea71d95 --token-id 2578
 2022/12/24 06:32:14 requesting asset 2578 from collection 0x6465ef3009f3c474774f4afb607a5d600ea71d95
 
 BitHero #2578:
@@ -74,7 +75,7 @@ BitHero #2578:
 
 ### Assets
 
-Queries the ImmutableX listAssets API for details asset information, see [https://docs.x.immutable.com/reference/#/operations/listAssets](https://docs.x.immutable.com/reference/#/operations/listAssets).
+Queries the ImmutableX listAssets API for detailed asset information, see [https://docs.x.immutable.com/reference/#/operations/listAssets](https://docs.x.immutable.com/reference/#/operations/listAssets).
 
 ```txt
 Usage:

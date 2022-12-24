@@ -11,13 +11,14 @@ import (
 )
 
 var (
-	assetAddr string
-	assetID   string
+	assetTokenAddress string
+	assetTokenID      string
+	assetIncludeFees  bool
 
 	assetCmd = &cobra.Command{
 		Use:   "asset",
 		Short: "Retrieve asset (NFT) information",
-		Long:  `Retrieve a specific asset (NFT) from Immutable`,
+		Long:  `Queries the ImmutableX getAsset endpoint for detailed asset information, see https://docs.x.immutable.com/reference/#/operations/getAsset`,
 		Run:   runAssetCMD,
 	}
 )
@@ -35,13 +36,14 @@ func runAssetCMD(cmd *cobra.Command, args []string) {
 	}
 	defer collectionManager.Stop()
 
-	if shortcut := collectionManager.GetShortcutByName(assetAddr); shortcut != nil {
-		assetAddr = shortcut.Addr
+	if shortcut := collectionManager.GetShortcutByName(assetTokenAddress); shortcut != nil {
+		assetTokenAddress = shortcut.Addr
 	}
 
-	log.Printf("requesting asset %s from collection %s", assetID, assetAddr)
+	log.Printf("requesting asset %s from collection %s", assetTokenID, assetTokenAddress)
 
-	asset, err := assetManager.GetAsset(context.Background(), assetAddr, assetID)
+	asset, err := assetManager.GetAsset(context.Background(), assetTokenAddress,
+		assetTokenID, assetIncludeFees)
 	if err != nil {
 		fmt.Printf("failed to retrieve asset: %v", err)
 		os.Exit(1)
@@ -52,8 +54,12 @@ func runAssetCMD(cmd *cobra.Command, args []string) {
 
 func init() {
 	rootCmd.AddCommand(assetCmd)
-	assetCmd.Flags().StringVarP(&assetAddr, "addr", "a", "", "address of the collection or shortcut")
-	assetCmd.MarkFlagRequired("addr")
-	assetCmd.Flags().StringVarP(&assetID, "id", "i", "", "id of the asset")
-	assetCmd.MarkFlagRequired("id")
+	assetCmd.Flags().StringVarP(&assetTokenAddress, "token-address", "a", "",
+		"address of the collection or shortcut")
+	assetCmd.Flags().StringVarP(&assetTokenID, "token-id", "i", "", "id of the asset")
+	assetCmd.Flags().BoolVarP(&assetIncludeFees, "include-fees", "f", false,
+		"include fees associated with the asset")
+
+	assetCmd.MarkFlagRequired("token-address")
+	assetCmd.MarkFlagRequired("token-id")
 }

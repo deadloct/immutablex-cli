@@ -25,7 +25,7 @@ var (
 	assetsCmd = &cobra.Command{
 		Use:   "assets",
 		Short: "List assets (NFTs) in bulk",
-		Long:  `Queries the ImmutableX listAssets API for details asset information, see https://docs.x.immutable.com/reference/#/operations/listAssets`,
+		Long:  `Queries the ImmutableX listAssets endpoint for retrieving assets in bulk, see https://docs.x.immutable.com/reference/#/operations/listAssets`,
 		Run:   runAssetsCMD,
 	}
 )
