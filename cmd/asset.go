@@ -11,8 +11,8 @@ import (
 )
 
 var (
-	assetType string
-	id        string
+	assetAddr string
+	assetID   string
 
 	assetCmd = &cobra.Command{
 		Use:   "asset",
@@ -29,13 +29,19 @@ func runAssetCMD(cmd *cobra.Command, args []string) {
 	}
 	defer assetManager.Stop()
 
-	if assetType != "hero" && assetType != "portal" {
-		cmd.Help()
-		os.Exit(1)
+	collectionManager := lib.NewCollectionManager()
+	if err := collectionManager.Start(); err != nil {
+		log.Panic(err)
+	}
+	defer collectionManager.Stop()
+
+	if shortcut := collectionManager.GetShortcutByName(assetAddr); shortcut != nil {
+		assetAddr = shortcut.Addr
 	}
 
-	addr := lib.Collections[assetType].Addr
-	asset, err := assetManager.GetAsset(context.Background(), addr, id)
+	log.Printf("requesting asset %s from collection %s", assetID, assetAddr)
+
+	asset, err := assetManager.GetAsset(context.Background(), assetAddr, assetID)
 	if err != nil {
 		fmt.Printf("failed to retrieve asset: %v", err)
 		os.Exit(1)
@@ -46,7 +52,8 @@ func runAssetCMD(cmd *cobra.Command, args []string) {
 
 func init() {
 	rootCmd.AddCommand(assetCmd)
-	assetCmd.Flags().StringVarP(&assetType, "type", "t", "hero", "Type")
-	assetCmd.Flags().StringVarP(&id, "id", "i", "", "")
+	assetCmd.Flags().StringVarP(&assetAddr, "addr", "a", "", "address of the collection or shortcut")
+	assetCmd.MarkFlagRequired("addr")
+	assetCmd.Flags().StringVarP(&assetID, "id", "i", "", "id of the asset")
 	assetCmd.MarkFlagRequired("id")
 }
