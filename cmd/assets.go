@@ -69,7 +69,7 @@ func runAssetsCMD(cmd *cobra.Command, args []string) {
 func init() {
 	rootCmd.AddCommand(assetsCmd)
 	assetsCmd.Flags().StringVarP(&collectionAddr, "addr", "a", "", "Address of the collection or shortcut")
-	assetCmd.MarkFlagRequired("addr")
+	assetsCmd.MarkFlagRequired("addr")
 
 	assetsCmd.Flags().StringVarP(&owner, "owner", "o", "", "Filter by owner")
 	assetsCmd.Flags().StringVarP(&rarity, "rarity", "r", "", "Filter by rarity")
