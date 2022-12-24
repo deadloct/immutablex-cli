@@ -13,7 +13,7 @@ First add your Alchemy API key to your environment as `ALCHEMY_API_KEY`.
 
 Next you can either `go install` it, or clone the repo and build it:
 
-```bash
+```txt
 % go install github.com/deadloct/immutablex-cli@latest
 
 # To remove it later:
@@ -22,7 +22,7 @@ Next you can either `go install` it, or clone the repo and build it:
 
 Clone and build method:
 
-```bash
+```txt
 % git clone git@github.com:deadloct/immutablex-cli.git
 % cd immutablex-cli
 % go build
@@ -34,7 +34,7 @@ The app currently has two commands: `asset` and `assets`.
 
 ### Asset
 
-```bash
+```txt
 Usage:
   immutablex-cli asset [flags]
 
@@ -51,7 +51,7 @@ Asset will retrive the given asset. The `id` and `addr` fields are required.
 
 For example, to retrieve one of the mythic heroes from the BitVerse Heroes collection:
 
-```bash
+```txt
 % immutablex-cli asset -a 0x6465ef3009f3c474774f4afb607a5d600ea71d95 -i 2578
 2022/12/24 06:32:14 requesting asset 2578 from collection 0x6465ef3009f3c474774f4afb607a5d600ea71d95
 
@@ -74,54 +74,46 @@ BitHero #2578:
 
 ### Assets
 
-```bash
+Queries the ImmutableX listAssets API for details asset information, see [https://docs.x.immutable.com/reference/#/operations/listAssets](https://docs.x.immutable.com/reference/#/operations/listAssets).
+
+```txt
 Usage:
   immutablex-cli assets [flags]
 
 Flags:
-  -a, --addr string     Address of the collection or shortcut
-  -h, --help            help for assets
-  -o, --owner string    Filter by owner
-  -r, --rarity string   Filter by rarity
-  -s, --status string   Filter by status
+  -b, --buy-orders                     Retrieve buy orders for each asset
+  -c, --collection string              Address of the collection or shortcut
+  -d, --direction string               asc|desc
+  -h, --help                           help for assets
+  -i, --include-fees                   Retrieves fees for each asset
+  -m, --metadata stringArray           Filter by metadata in key=value format (repeatable). For example "immutable-cli assets -m Rarity=Mythic -m Generation=0. Note that metadata keys and values are case sensitive.
+  -n, --name string                    Search for this asset name (default "desc")
+  -o, --order-by string                updated_at|name (default "updated_at")
+  -l, --sell-orders                    Retrieves sell orders for each asset
+  -s, --status string                  Filter by the status: eth|imx|preparing_withdrawal|withdrawable|burned
+  -x, --updated-max-timestamp string   Include results on or before this time in ISO 8601 UTC format
+  -z, --updated-min-timestamp string   Include results on or after this time in ISO 8601 UTC format
+  -u, --user string                    Retrieves assets owned by this user/wallet address
 
 Global Flags:
   -v, --verbose   Verbose output
 ```
 
-For example, to retrieve all mythic NFTs with their URLs (`-v`):
+Example:
 
-```bash
-% immutablex-cli assets -a 0x6465ef3009f3c474774f4afb607a5d600ea71d95 -r mythic -v
-2022/12/24 06:33:03 fetched 200 assets from 2022-12-24T13:18:02.817906Z to 2022-11-30T15:29:52.931155Z
-2022/12/24 06:33:03 fetched 200 assets from 2022-11-30T15:02:10.663512Z to 2022-11-03T20:54:10.896841Z
-2022/12/24 06:33:04 fetched 200 assets from 2022-11-03T20:51:52.221243Z to 2022-09-27T13:57:14.24508Z
-2022/12/24 06:33:04 fetched 172 assets from 2022-09-27T13:57:14.24508Z to 2022-09-21T19:46:01.938354Z
-BitHero #7120: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/7120)
-BitHero #2546: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2546)
-BitHero #2577: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2577)
-BitHero #2566: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2566)
-BitHero #2588: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2588)
-BitHero #2594: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2594)
-BitHero #2538: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2538)
-BitHero #2571: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2571)
-BitHero #2569: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2569)
-BitHero #2545: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2545)
-BitHero #2560: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2560)
-BitHero #2567: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2567)
-BitHero #2592: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2592)
-BitHero #2581: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2581)
-BitHero #2583: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2583)
-BitHero #2585: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2585)
-BitHero #2578: imx (https:/immutascan.io/address/0x6465ef3009f3c474774f4afb607a5d600ea71d95/2578)
+```txt
+% immutablex-cli assets --collection 0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291 --updated-min-timestamp=2022-12-23T00:00:00Z --metadata Generation=0 -v
+2022/12/24 13:19:12 fetched 2 assets from 2022-12-23T08:18:19.07428Z to 2022-12-24T13:13:50.647132Z
+Portal #969: burned (https:/immutascan.io/address/0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291/969)
+Portal #1439: burned (https:/immutascan.io/address/0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291/1439)
 
-Asset counts for collection 0x6465ef3009f3c474774f4afb607a5d600ea71d95:
-- Common: 0
-- Rare: 0
+Asset counts for collection 0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291:
+- Common: 1
+- Rare: 1
 - Epic: 0
 - Legendary: 0
-- Mythic: 17
-- Total: 17 
+- Mythic: 0
+- Total: 2
 ```
 
 ## Shortcuts
@@ -130,7 +122,7 @@ Remembering collection addresses is tedious. If you'd rather use a shortname for
 
 For example, retrieving the specific NFT above with the shortcut `hero`:
 
-```bash
+```txt
 % immutablex-cli asset -a hero -i 2578
 2022/12/24 06:32:14 requesting asset 2578 from collection 0x6465ef3009f3c474774f4afb607a5d600ea71d95
 
