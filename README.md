@@ -128,6 +128,34 @@ Portal #1439 (Status: burned): (https:/immutascan.io/address/0xe4ac52f4b4a721d1d
 2 total assets returned
 ```
 
+### List Collections
+
+Queries the ImmutableX listCollections endpoint for retrieving collections in bulk, see [https://docs.x.immutable.com/reference/#/operations/listCollections](https://docs.x.immutable.com/reference/#/operations/listCollections).
+
+```txt
+Usage:
+  immutablex-cli list-collections [flags]
+
+Flags:
+  -b, --blacklist string   comma-separated collections to exclude
+  -d, --direction string   asc|desc
+  -h, --help               help for list-collections
+  -k, --keyword string     search by name and description
+  -o, --order-by string    updated_at|name (default "updated_at")
+  -w, --whitelist string   comma-separated collections to only include
+
+Global Flags:
+  -v, --verbose   enable debug logging
+```
+
+Example:
+
+```txt
+% immutablex-cli list-collections --blacklist 0x6465ef3009f3c474774f4afb607a5d600ea71d95 --keyword bitverse
+Bitverse Portals: https://immutascan.io/address/0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291
+1 total collections returned
+```
+
 ## Shortcuts
 
 Remembering collection addresses is tedious. If you'd rather use a shortname for a commonly used collection, copy the json data at the top of `lib/collection_manager.go` to some file on your computer, and then set an environment variable `IMX_SHORTCUT_LOCATION` for the full path to that file. After that you can use the shortcut in commands instead of the collection address.
