@@ -1,7 +1,14 @@
 package main
 
-import "github.com/deadloct/immutablex-cli/cmd"
+import (
+	"os"
+
+	"github.com/deadloct/immutablex-cli/cmd"
+	log "github.com/sirupsen/logrus"
+)
 
 func main() {
+	log.SetOutput(os.Stdout)
+
 	cmd.Execute()
 }

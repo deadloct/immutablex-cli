@@ -3,9 +3,10 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"log"
+	"os"
 
 	"github.com/deadloct/immutablex-cli/lib"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -23,23 +24,26 @@ var (
 	assetsUser                string
 
 	assetsCmd = &cobra.Command{
-		Use:   "assets",
-		Short: "List assets (NFTs) in bulk",
-		Long:  `Queries the ImmutableX listAssets endpoint for retrieving assets in bulk, see https://docs.x.immutable.com/reference/#/operations/listAssets`,
-		Run:   runAssetsCMD,
+		Use:    "assets",
+		Short:  "List assets (NFTs) in bulk",
+		Long:   `Queries the ImmutableX listAssets endpoint for retrieving assets in bulk, see https://docs.x.immutable.com/reference/#/operations/listAssets`,
+		PreRun: SetupLogging,
+		Run:    runAssetsCMD,
 	}
 )
 
 func runAssetsCMD(cmd *cobra.Command, args []string) {
 	assetManager := lib.NewAssetManager()
 	if err := assetManager.Start(); err != nil {
-		log.Panic(err)
+		log.Error(err)
+		os.Exit(1)
 	}
 	defer assetManager.Stop()
 
 	collectionManager := lib.NewCollectionManager()
 	if err := collectionManager.Start(); err != nil {
-		log.Panic(err)
+		log.Error(err)
+		os.Exit(1)
 	}
 	defer collectionManager.Stop()
 
@@ -63,14 +67,15 @@ func runAssetsCMD(cmd *cobra.Command, args []string) {
 
 	assetsMetadata, err := cmd.Flags().GetStringArray("metadata")
 	if err != nil {
-		log.Printf("unable to parse metadata: %v\n", err)
+		log.Debugf("unable to parse metadata: %v\n", err)
 	} else {
 		req.Metadata = assetsMetadata
 	}
 
 	assets, err := assetManager.GetAssets(context.Background(), req)
 	if err != nil {
-		fmt.Printf("error retrieving assets for collection %s: %v\n", assetsCollection, err)
+		log.Error("error retrieving assets for collection %s: %v\n", assetsCollection, err)
+		os.Exit(1)
 	}
 
 	assetManager.PrintAssets(assetsCollection, assets)

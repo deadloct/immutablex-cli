@@ -7,7 +7,7 @@
 Prerequisites:
 
 * Go [go.dev](https://go.dev/)
-* An Alchemy API Key from [alchemy.com](https://alchemy.com) (it's free)
+* An Alchemy API Key from [alchemy.com](https://alchemy.com) (it's free). This is a requirement by the underlying ImmutableX golang client. Might be worth just using the HTTP API to remove this requirement.
 
 First add your Alchemy API key to your environment as `ALCHEMY_API_KEY`.
 
@@ -47,14 +47,13 @@ Flags:
   -i, --token-id string        id of the asset
 
 Global Flags:
-  -v, --verbose   Verbose output
+  -v, --verbose   enable debug logging
 ```
 
 Example:
 
 ```txt
 % immutablex-cli asset --token-address 0x6465ef3009f3c474774f4afb607a5d600ea71d95 --token-id 2578
-2022/12/24 14:03:06 requesting asset 2578 from collection 0x6465ef3009f3c474774f4afb607a5d600ea71d95
 {
   "collection": {
     "icon_url": "https://thebitverse.io/nft-assets/heroes_cover_image.png",
@@ -117,14 +116,13 @@ Flags:
   -u, --user string                    Retrieves assets owned by this user/wallet address
 
 Global Flags:
-  -v, --verbose   Verbose output
+  -v, --verbose   enable debug logging
 ```
 
 Example:
 
 ```txt
 % immutablex-cli assets --collection 0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291 --updated-min-timestamp=2022-12-23T00:00:00Z --metadata Generation=0
-2022/12/24 14:05:42 fetched 2 assets from 2022-12-23T08:18:19.07428Z to 2022-12-24T13:13:50.647132Z
 Portal #969 (Status: burned): (https:/immutascan.io/address/0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291/969)
 Portal #1439 (Status: burned): (https:/immutascan.io/address/0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291/1439)
 2 total assets returned
@@ -138,7 +136,6 @@ For example, retrieving the specific NFT above with the shortcut `hero`:
 
 ```txt
 % immutablex-cli asset --token-address hero --token-id 2578
-2022/12/24 14:08:22 requesting asset 2578 from collection 0x6465ef3009f3c474774f4afb607a5d600ea71d95
 {
   "collection": {
     "icon_url": "https://thebitverse.io/nft-assets/heroes_cover_image.png",

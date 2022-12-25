@@ -2,11 +2,10 @@ package cmd
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"os"
 
 	"github.com/deadloct/immutablex-cli/lib"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -16,23 +15,26 @@ var (
 	assetIncludeFees  bool
 
 	assetCmd = &cobra.Command{
-		Use:   "asset",
-		Short: "Retrieve asset (NFT) information",
-		Long:  `Queries the ImmutableX getAsset endpoint for detailed asset information, see https://docs.x.immutable.com/reference/#/operations/getAsset`,
-		Run:   runAssetCMD,
+		Use:    "asset",
+		Short:  "Retrieve asset (NFT) information",
+		Long:   `Queries the ImmutableX getAsset endpoint for detailed asset information, see https://docs.x.immutable.com/reference/#/operations/getAsset`,
+		PreRun: SetupLogging,
+		Run:    runAssetCMD,
 	}
 )
 
 func runAssetCMD(cmd *cobra.Command, args []string) {
 	assetManager := lib.NewAssetManager()
 	if err := assetManager.Start(); err != nil {
-		log.Panic(err)
+		log.Error(err)
+		os.Exit(1)
 	}
 	defer assetManager.Stop()
 
 	collectionManager := lib.NewCollectionManager()
 	if err := collectionManager.Start(); err != nil {
-		log.Panic(err)
+		log.Error(err)
+		os.Exit(1)
 	}
 	defer collectionManager.Stop()
 
@@ -40,12 +42,10 @@ func runAssetCMD(cmd *cobra.Command, args []string) {
 		assetTokenAddress = shortcut.Addr
 	}
 
-	log.Printf("requesting asset %s from collection %s", assetTokenID, assetTokenAddress)
-
 	asset, err := assetManager.GetAsset(context.Background(), assetTokenAddress,
 		assetTokenID, assetIncludeFees)
 	if err != nil {
-		fmt.Printf("failed to retrieve asset: %v", err)
+		log.Error("failed to retrieve asset: %v", err)
 		os.Exit(1)
 	}
 
