@@ -32,13 +32,13 @@ Clone and build method:
 
 The app currently has two commands: `asset` and `assets`.
 
-### Asset
+### Get Asset
 
 Queries the ImmutableX getAsset endpoint for detailed asset information, see [https://docs.x.immutable.com/reference/#/operations/getAsset](https://docs.x.immutable.com/reference/#/operations/getAsset).
 
 ```txt
 Usage:
-  immutablex-cli asset [flags]
+  immutablex-cli get-asset [flags]
 
 Flags:
   -h, --help                   help for asset
@@ -53,7 +53,7 @@ Global Flags:
 Example:
 
 ```txt
-% immutablex-cli asset --token-address 0x6465ef3009f3c474774f4afb607a5d600ea71d95 --token-id 2578
+% immutablex-cli get-asset --token-address 0x6465ef3009f3c474774f4afb607a5d600ea71d95 --token-id 2578
 {
   "collection": {
     "icon_url": "https://thebitverse.io/nft-assets/heroes_cover_image.png",
@@ -92,13 +92,13 @@ Example:
 }
 ```
 
-### Assets
+### List Assets
 
 Queries the ImmutableX listAssets API for detailed asset information, see [https://docs.x.immutable.com/reference/#/operations/listAssets](https://docs.x.immutable.com/reference/#/operations/listAssets).
 
 ```txt
 Usage:
-  immutablex-cli assets [flags]
+  immutablex-cli list-assets [flags]
 
 Flags:
   -b, --buy-orders                     Retrieve buy orders for each asset
@@ -122,7 +122,7 @@ Global Flags:
 Example:
 
 ```txt
-% immutablex-cli assets --collection 0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291 --updated-min-timestamp=2022-12-23T00:00:00Z --metadata Generation=0
+% immutablex-cli list-assets --collection 0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291 --updated-min-timestamp=2022-12-23T00:00:00Z --metadata Generation=0
 Portal #969 (Status: burned): (https:/immutascan.io/address/0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291/969)
 Portal #1439 (Status: burned): (https:/immutascan.io/address/0xe4ac52f4b4a721d1d0ad8c9c689df401c2db7291/1439)
 2 total assets returned
@@ -163,7 +163,7 @@ Remembering collection addresses is tedious. If you'd rather use a shortname for
 For example, retrieving the specific NFT above with the shortcut `hero`:
 
 ```txt
-% immutablex-cli asset --token-address hero --token-id 2578
+% immutablex-cli get-asset --token-address hero --token-id 2578
 {
   "collection": {
     "icon_url": "https://thebitverse.io/nft-assets/heroes_cover_image.png",
