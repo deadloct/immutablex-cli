@@ -17,7 +17,7 @@ Next you can either `go install` it, or clone the repo and build it:
 % go install github.com/deadloct/immutablex-cli@latest
 
 # To remove it later:
-% go clean -n -i github.com/deadloct/immutablex-cli...
+% go clean -i github.com/deadloct/immutablex-cli...
 ```
 
 Clone and build method:
