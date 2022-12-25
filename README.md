@@ -128,6 +128,40 @@ Portal #1439 (Status: burned): (https:/immutascan.io/address/0xe4ac52f4b4a721d1d
 2 total assets returned
 ```
 
+### Get Collection
+
+Queries the ImmutableX getCollection endpoint for detailed collection information, see [https://docs.x.immutable.com/reference/#/operations/getCollection](https://docs.x.immutable.com/reference/#/operations/getCollection).
+
+```txt
+Usage:
+  immutablex-cli get-collection [flags]
+
+Flags:
+  -c, --collection string   address of the collection
+  -h, --help                help for get-collection
+
+Global Flags:
+  -v, --verbose   enable debug logging
+```
+
+Example:
+
+```txt
+% immutablex-cli get-collection -c 0x6465ef3009f3c474774f4afb607a5d600ea71d95
+{
+  "address": "0x6465ef3009f3c474774f4afb607a5d600ea71d95",
+  "collection_image_url": "https://thebitverse.io/nft-assets/heroes_cover_image.png",
+  "created_at": "2022-09-17T00:50:57.31643Z",
+  "description": "Own your progress. Own your brand. Access exclusive content. Bitverse Heroes are your key to the exciting Bitverse.",
+  "icon_url": "https://thebitverse.io/nft-assets/heroes_cover_image.png",
+  "metadata_api_url": "https://thebitverse.io/api/heroes/metadata/imx",
+  "name": "Bitverse Heroes",
+  "project_id": 10014,
+  "project_owner_address": "0x771642c8ad544b48308f5e3a49d73da94d62be3f",
+  "updated_at": "2022-09-17T00:50:57.31643Z"
+}
+```
+
 ### List Collections
 
 Queries the ImmutableX listCollections endpoint for retrieving collections in bulk, see [https://docs.x.immutable.com/reference/#/operations/listCollections](https://docs.x.immutable.com/reference/#/operations/listCollections).

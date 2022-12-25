@@ -27,13 +27,6 @@ var (
 )
 
 func runListCollectionsCMD(cmd *cobra.Command, args []string) {
-	assetManager := lib.NewAssetManager()
-	if err := assetManager.Start(); err != nil {
-		log.Error(err)
-		os.Exit(1)
-	}
-	defer assetManager.Stop()
-
 	collectionManager := lib.NewCollectionManager()
 	if err := collectionManager.Start(); err != nil {
 		log.Error(err)
@@ -55,7 +48,7 @@ func runListCollectionsCMD(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	collectionManager.PrintCollections(collections)
+	collectionManager.PrintCollections(collections, verbose)
 	fmt.Printf("%d total collections returned", len(collections))
 }
 

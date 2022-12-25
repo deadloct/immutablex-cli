@@ -14,7 +14,7 @@ var (
 	getAssetTokenID      string
 	getAssetIncludeFees  bool
 
-	assetCmd = &cobra.Command{
+	getAssetCmd = &cobra.Command{
 		Use:    "get-asset",
 		Short:  "Retrieve asset (NFT) information",
 		Long:   `Queries the ImmutableX getAsset endpoint for detailed asset information, see https://docs.x.immutable.com/reference/#/operations/getAsset`,
@@ -53,13 +53,13 @@ func runGetAssetCMD(cmd *cobra.Command, args []string) {
 }
 
 func init() {
-	rootCmd.AddCommand(assetCmd)
-	assetCmd.Flags().StringVarP(&getAssetTokenAddress, "token-address", "a", "",
+	rootCmd.AddCommand(getAssetCmd)
+	getAssetCmd.Flags().StringVarP(&getAssetTokenAddress, "token-address", "a", "",
 		"address of the collection or shortcut")
-	assetCmd.Flags().StringVarP(&getAssetTokenID, "token-id", "i", "", "id of the asset")
-	assetCmd.Flags().BoolVarP(&getAssetIncludeFees, "include-fees", "f", false,
+	getAssetCmd.Flags().StringVarP(&getAssetTokenID, "token-id", "i", "", "id of the asset")
+	getAssetCmd.Flags().BoolVarP(&getAssetIncludeFees, "include-fees", "f", false,
 		"include fees associated with the asset")
 
-	assetCmd.MarkFlagRequired("token-address")
-	assetCmd.MarkFlagRequired("token-id")
+	getAssetCmd.MarkFlagRequired("token-address")
+	getAssetCmd.MarkFlagRequired("token-id")
 }
