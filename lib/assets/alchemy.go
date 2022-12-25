@@ -1,60 +1,45 @@
-package lib
+package assets
 
 import (
 	"context"
 	"encoding/json"
-	"fmt"
-	"path"
 	"strings"
 
+	"github.com/deadloct/immutablex-cli/lib/imx_alchemy"
 	"github.com/immutable/imx-core-sdk-golang/imx/api"
 	log "github.com/sirupsen/logrus"
 )
 
-type AssetManager struct {
-	client IMXClientWrapper
+const MaxAssetsPerReq = 200
+
+type AlchemyClientConfig struct {
+	alchemyKey string
 }
 
-func NewAssetManager() *AssetManager {
-	return &AssetManager{
-		client: NewClient(),
+type AlchemyClient struct {
+	client imx_alchemy.ClientWrapper
+}
+
+func NewAlchemyClient(cfg AlchemyClientConfig) *AlchemyClient {
+	return &AlchemyClient{
+		client: imx_alchemy.NewClient(cfg.alchemyKey),
 	}
 }
 
-func (am *AssetManager) Start() error {
+func (am *AlchemyClient) Start() error {
 	return am.client.Start()
 }
 
-func (am *AssetManager) Stop() {
+func (am *AlchemyClient) Stop() {
 	am.client.Stop()
 }
 
-func (am *AssetManager) GetAsset(ctx context.Context, tokenAddress, tokenID string, includeFees bool) (*api.Asset, error) {
+func (am *AlchemyClient) GetAsset(ctx context.Context, tokenAddress, tokenID string, includeFees bool) (*api.Asset, error) {
 	log.Debugf("fetching asset id %s from collection %s (with fees:%b)", tokenAddress, tokenID, includeFees)
 	return am.client.GetClient().GetAsset(ctx, tokenAddress, tokenID, &includeFees)
 }
 
-type ListAssetsConfig struct {
-	BuyOrders           bool
-	Collection          string
-	Direction           string
-	IncludeFees         bool
-	Metadata            []string
-	Name                string
-	OrderBy             string
-	SellOrders          bool
-	Status              string
-	UpdatedMaxTimestamp string
-	UpdatedMinTimestamp string
-	User                string
-
-	// Used internally for recursion
-	Assets []api.AssetWithOrders
-	Cursor string
-	Before string
-}
-
-func (am *AssetManager) ListAssets(
+func (am *AlchemyClient) ListAssets(
 	ctx context.Context,
 	cfg *ListAssetsConfig,
 ) ([]api.AssetWithOrders, error) {
@@ -89,39 +74,7 @@ func (am *AssetManager) ListAssets(
 	return cfg.Assets, nil
 }
 
-func (am *AssetManager) PrintAsset(asset *api.Asset) {
-	data, err := json.MarshalIndent(asset, "", "  ")
-	if err != nil {
-		log.Debugf("could not convert asset to json: %v\nasset: %#v\n", err, asset)
-		return
-	}
-
-	fmt.Println(string(data))
-}
-
-func (am *AssetManager) PrintAssets(collectionAddr string, assets []api.AssetWithOrders) {
-	for _, asset := range assets {
-		name := "[no name set]"
-		status := asset.Status
-		id := *asset.Id
-
-		if asset.Name.IsSet() && asset.Name.Get() != nil {
-			name = *asset.Name.Get()
-		}
-
-		if status == "" {
-			status = "[no status set]"
-		}
-
-		if id == "" {
-			id = "[no id set]"
-		}
-
-		fmt.Printf("%s (Status: %v): (%s)\n", name, status, path.Join(ImmutascanURL, collectionAddr, asset.TokenId))
-	}
-}
-
-func (am *AssetManager) getAPIListAssetsRequest(ctx context.Context, cfg *ListAssetsConfig) api.ApiListAssetsRequest {
+func (am *AlchemyClient) getAPIListAssetsRequest(ctx context.Context, cfg *ListAssetsConfig) api.ApiListAssetsRequest {
 	req := am.client.GetClient().NewListAssetsRequest(ctx).
 		Collection(cfg.Collection).
 		PageSize(MaxAssetsPerReq)
@@ -186,7 +139,7 @@ func (am *AssetManager) getAPIListAssetsRequest(ctx context.Context, cfg *ListAs
 	return req
 }
 
-func (am *AssetManager) parseMetadata(metadata []string) string {
+func (am *AlchemyClient) parseMetadata(metadata []string) string {
 	metamap := make(map[string][]string, len(metadata))
 	for _, item := range metadata {
 		parts := strings.SplitN(item, "=", 2)

@@ -1,4 +1,4 @@
-package lib
+package imx_alchemy
 
 import (
 	"os"
@@ -9,8 +9,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-const MaxAssetsPerReq = 200
-
 var AlchemyKey string
 
 func init() {
@@ -20,7 +18,7 @@ func init() {
 	}
 }
 
-type IMXClientWrapper interface {
+type ClientWrapper interface {
 	Start() error
 	Stop()
 	GetClient() *imx.Client
@@ -33,8 +31,8 @@ type Client struct {
 	sync.Mutex
 }
 
-func NewClient() *Client {
-	return &Client{key: AlchemyKey}
+func NewClient(alchemyKey string) *Client {
+	return &Client{key: alchemyKey}
 }
 
 func (c *Client) Start() error {

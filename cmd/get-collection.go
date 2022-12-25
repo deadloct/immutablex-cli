@@ -16,7 +16,7 @@ var (
 		Use:    "get-collection",
 		Short:  "Retrieve details collection information",
 		Long:   `Queries the ImmutableX getCollection endpoint for detailed collection information, see https://docs.x.immutable.com/reference/#/operations/getCollection`,
-		PreRun: SetupLogging,
+		PreRun: PreRun,
 		Run:    runGetCollectionCMD,
 	}
 )

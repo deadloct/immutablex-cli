@@ -7,9 +7,12 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/deadloct/immutablex-cli/lib/imx_alchemy"
 	"github.com/immutable/imx-core-sdk-golang/imx/api"
 	log "github.com/sirupsen/logrus"
 )
+
+const MaxCollectionsPerReq = 200
 
 var DefaultShortcutsContent = []byte(`
 [
@@ -39,12 +42,12 @@ type CollectionShortcut struct {
 }
 
 type CollectionManager struct {
-	client    IMXClientWrapper
+	client    imx_alchemy.ClientWrapper
 	shortcuts map[string]CollectionShortcut
 }
 
 func NewCollectionManager() *CollectionManager {
-	cm := &CollectionManager{client: NewClient()}
+	cm := &CollectionManager{client: imx_alchemy.NewClient()}
 	cm.loadShortcuts()
 	return cm
 }
@@ -126,7 +129,7 @@ func (c *CollectionManager) PrintCollections(collections []api.Collection, detai
 }
 
 func (c *CollectionManager) getAPIListCollectionsRequest(ctx context.Context, cfg *ListCollectionsConfig) *api.ApiListCollectionsRequest {
-	req := c.client.GetClient().NewListCollectionsRequest(ctx).PageSize(MaxAssetsPerReq)
+	req := c.client.GetClient().NewListCollectionsRequest(ctx).PageSize(MaxCollectionsPerReq)
 
 	if cfg.Blacklist != "" {
 		req = req.Blacklist(cfg.Blacklist)

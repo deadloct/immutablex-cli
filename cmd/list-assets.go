@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/deadloct/immutablex-cli/lib"
+	libassets "github.com/deadloct/immutablex-cli/lib/assets"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -27,18 +28,18 @@ var (
 		Use:    "list-assets",
 		Short:  "List assets (NFTs) in bulk",
 		Long:   `Queries the ImmutableX listAssets endpoint for retrieving assets in bulk, see https://docs.x.immutable.com/reference/#/operations/listAssets`,
-		PreRun: SetupLogging,
+		PreRun: PreRun,
 		Run:    runListAssetsCMD,
 	}
 )
 
 func runListAssetsCMD(cmd *cobra.Command, args []string) {
-	assetManager := lib.NewAssetManager()
-	if err := assetManager.Start(); err != nil {
+	client := libassets.NewClient(libassets.NewClientConfig(alchemyKey))
+	if err := client.Start(); err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
-	defer assetManager.Stop()
+	defer client.Stop()
 
 	collectionManager := lib.NewCollectionManager()
 	if err := collectionManager.Start(); err != nil {
@@ -51,7 +52,7 @@ func runListAssetsCMD(cmd *cobra.Command, args []string) {
 		listAssetsCollection = shortcut.Addr
 	}
 
-	req := &lib.ListAssetsConfig{
+	cfg := libassets.ListAssetsConfig{
 		BuyOrders:           listAssetsBuyOrders,
 		Collection:          listAssetsCollection,
 		Direction:           listAssetsDirection,
@@ -69,16 +70,16 @@ func runListAssetsCMD(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Debugf("unable to parse metadata: %v\n", err)
 	} else {
-		req.Metadata = assetsMetadata
+		cfg.Metadata = assetsMetadata
 	}
 
-	assets, err := assetManager.ListAssets(context.Background(), req)
+	assets, err := client.ListAssets(context.Background(), cfg)
 	if err != nil {
 		log.Error("error retrieving assets for collection %s: %v\n", listAssetsCollection, err)
 		os.Exit(1)
 	}
 
-	assetManager.PrintAssets(listAssetsCollection, assets)
+	libassets.PrintAssets(listAssetsCollection, assets)
 	fmt.Printf("%d total assets returned", len(assets))
 }
 

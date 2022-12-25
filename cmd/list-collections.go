@@ -21,7 +21,7 @@ var (
 		Use:    "list-collections",
 		Short:  "List NFT collections",
 		Long:   `Queries the ImmutableX listCollections endpoint for retrieving collections in bulk, see https://docs.x.immutable.com/reference/#/operations/listCollections`,
-		PreRun: SetupLogging,
+		PreRun: PreCmd,
 		Run:    runListCollectionsCMD,
 	}
 )
