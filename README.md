@@ -25,8 +25,6 @@ Option 2: Clone and build method:
 
 ## Usage
 
-The app currently has two commands: `asset` and `assets`.
-
 ### Get Asset
 
 Queries the ImmutableX getAsset endpoint for detailed asset information, see [https://docs.x.immutable.com/reference/#/operations/getAsset](https://docs.x.immutable.com/reference/#/operations/getAsset).
