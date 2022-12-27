@@ -1,17 +1,12 @@
 # immutablex-cli
 
-> **_NOTE:_**  This is an alpha stage tool that is currently being developed. It has very limited Immutable X API support atm.
+> **_NOTE:_**  This is an alpha stage tool that is currently being developed. It has very limited ImmutableX API support at the moment.
 
 ## Installation
 
-Prerequisites:
+Follow the instructions on [go.dev](https://go.dev/) to install the latest version of Go.
 
-* Go [go.dev](https://go.dev/)
-* An Alchemy API Key from [alchemy.com](https://alchemy.com) (it's free). This is a requirement by the underlying ImmutableX golang client. Might be worth just using the HTTP API to remove this requirement.
-
-First add your Alchemy API key to your environment as `ALCHEMY_API_KEY`.
-
-Next you can either `go install` it, or clone the repo and build it:
+Option 1: `go install` method:
 
 ```txt
 % go install github.com/deadloct/immutablex-cli@latest
@@ -20,7 +15,7 @@ Next you can either `go install` it, or clone the repo and build it:
 % go clean -i github.com/deadloct/immutablex-cli...
 ```
 
-Clone and build method:
+Option 2: Clone and build method:
 
 ```txt
 % git clone git@github.com:deadloct/immutablex-cli.git

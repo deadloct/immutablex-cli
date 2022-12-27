@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/deadloct/immutablex-cli/lib"
+	"github.com/deadloct/immutablex-cli/lib/collections"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
@@ -16,30 +16,26 @@ var (
 		Use:    "get-collection",
 		Short:  "Retrieve details collection information",
 		Long:   `Queries the ImmutableX getCollection endpoint for detailed collection information, see https://docs.x.immutable.com/reference/#/operations/getCollection`,
-		PreRun: SetupLogging,
+		PreRun: PreRun,
 		Run:    runGetCollectionCMD,
 	}
 )
 
 func runGetCollectionCMD(cmd *cobra.Command, args []string) {
-	collectionManager := lib.NewCollectionManager()
-	if err := collectionManager.Start(); err != nil {
+	client := collections.NewClient(collections.NewClientConfig(alchemyKey))
+	if err := client.Start(); err != nil {
 		log.Error(err)
 		os.Exit(1)
 	}
-	defer collectionManager.Stop()
+	defer client.Stop()
 
-	if shortcut := collectionManager.GetShortcutByName(getCollectionAddress); shortcut != nil {
-		getCollectionAddress = shortcut.Addr
-	}
-
-	collection, err := collectionManager.GetCollection(context.Background(), getCollectionAddress)
+	collection, err := client.GetCollection(context.Background(), getCollectionAddress)
 	if err != nil {
 		log.Error("failed to retrieve collection %s: %v", getCollectionAddress, err)
 		os.Exit(1)
 	}
 
-	collectionManager.PrintCollection(collection)
+	collections.PrintCollection(collection)
 }
 
 func init() {
