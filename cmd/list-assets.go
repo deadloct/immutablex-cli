@@ -58,7 +58,7 @@ func runListAssetsCMD(cmd *cobra.Command, args []string) {
 	if err != nil {
 		log.Debugf("unable to parse metadata: %v\n", err)
 	} else {
-		cfg.Metadata = assetsMetadata
+		cfg.Metadata = jsonEncodeMetadata(assetsMetadata)
 	}
 
 	assets, err := client.ListAssets(context.Background(), cfg)
