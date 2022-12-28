@@ -116,6 +116,7 @@ func init() {
 	listOrdersCmd.Flags().StringVar(&listOrdersMaxTimestamp, "max-timestamp", "", "Maximum created at timestamp for this order, in ISO 8601 UTC format. Example: '2022-05-27T00:10:22Z'")
 	listOrdersCmd.Flags().StringVar(&listOrdersMinTimestamp, "min-timestamp", "", "Minimum created at timestamp for this order, in ISO 8601 UTC format. Example: '2022-05-27T00:10:22Z'")
 	listOrdersCmd.Flags().StringVar(&listOrdersOrderBy, "order-by", "", "Property to sort by (options: created_at|expired_at|sell_quantity|buy_quantity|buy_quantity_with_fees|updated_at")
+	listOrdersCmd.Flags().IntVar(&listOrdersPageSize, "page-size", 20, "Page size of the result. Unofficial: if page-size is zero, all orders will be returned. Will attempt to retrive more pages up to the desired size.")
 	listOrdersCmd.Flags().StringVar(&listOrdersSellAssetID, "sell-asset-id", "", "Internal IMX ID of the asset this order sells")
 	listOrdersCmd.Flags().StringVar(&listOrdersSellMaxQuantity, "sell-max_quantity", "", "Max quantity for the asset this order sells")
 	listOrdersCmd.Flags().StringVar(&listOrdersSellMetadata, "sell-metadata", "", "repeatable key=value formatted metadata filters for the asset this order sells")
