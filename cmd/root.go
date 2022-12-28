@@ -9,6 +9,7 @@ import (
 
 var (
 	verbose bool
+	output  string
 
 	rootCmd = &cobra.Command{
 		Use:    "immutablex-cli",
@@ -24,6 +25,7 @@ var (
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "enable debug logging")
+	rootCmd.PersistentFlags().StringVarP(&output, "output", "o", "", "Changes output to these options: normal|json")
 }
 
 func Execute() {

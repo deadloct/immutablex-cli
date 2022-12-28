@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	libassets "github.com/deadloct/immutablex-cli/lib/assets"
@@ -67,8 +66,8 @@ func runListAssetsCMD(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	libassets.PrintAssets(listAssetsCollection, assets)
-	fmt.Printf("%d total assets returned", len(assets))
+	libassets.PrintAssets(listAssetsCollection, assets, output)
+	log.Debugf("%d total assets returned", len(assets))
 }
 
 func init() {
@@ -83,7 +82,7 @@ func init() {
 			`"immutable-cli assets -m Rarity=Mythic -m Generation=0. Note that metadata `+
 			`keys and values are case sensitive.`)
 	assetsCmd.Flags().StringVarP(&listAssetsName, "name", "n", "", "Search for this asset name")
-	assetsCmd.Flags().StringVarP(&listAssetsOrderBy, "order-by", "o", "updated_at", "updated_at|name")
+	assetsCmd.Flags().StringVar(&listAssetsOrderBy, "order-by", "updated_at", "updated_at|name")
 	assetsCmd.Flags().BoolVarP(&listAssetsSellOrders, "sell-orders", "l", false, "Retrieves sell orders for each asset")
 	assetsCmd.Flags().StringVarP(&listAssetsStatus, "status", "s", "", "Filter by the status: eth|imx|preparing_withdrawal|withdrawable|burned")
 	assetsCmd.Flags().StringVarP(&listAssetsUpdatedMaxTimestamp, "updated-max-timestamp", "x", "", "Include results on or before this time in ISO 8601 UTC format")

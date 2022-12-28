@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/deadloct/immutablex-cli/lib/collections"
@@ -48,8 +47,8 @@ func runListCollectionsCMD(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	collections.PrintCollections(result, verbose)
-	fmt.Printf("%d total collections returned", len(result))
+	collections.PrintCollections(result, output)
+	log.Debugf("%d total collections returned", len(result))
 }
 
 func init() {
@@ -58,6 +57,6 @@ func init() {
 	listCollectionsCmd.Flags().StringVarP(&listCollectionsBlacklist, "blacklist", "b", "", "comma-separated collections to exclude")
 	listCollectionsCmd.Flags().StringVarP(&listCollectionsDirection, "direction", "d", "desc", "asc|desc")
 	listCollectionsCmd.Flags().StringVarP(&listCollectionsKeyword, "keyword", "k", "", "search by name and description")
-	listCollectionsCmd.Flags().StringVarP(&listCollectionsOrderBy, "order-by", "o", "updated_at", "updated_at|name")
+	listCollectionsCmd.Flags().StringVar(&listCollectionsOrderBy, "order-by", "updated_at", "updated_at|name")
 	listCollectionsCmd.Flags().StringVarP(&listCollectionsWhitelist, "whitelist", "w", "", "comma-separated collections to only include")
 }

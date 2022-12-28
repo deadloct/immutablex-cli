@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"fmt"
 	"os"
 
 	"github.com/deadloct/immutablex-cli/lib/orders"
@@ -94,8 +93,8 @@ func runListOrdersCMD(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	orders.PrintOrders(result, verbose)
-	fmt.Printf("%d total orders returned", len(result))
+	orders.PrintOrders(result, output)
+	log.Debugf("%d total orders returned", len(result))
 }
 
 func init() {

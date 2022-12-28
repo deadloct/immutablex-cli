@@ -38,7 +38,7 @@ func runGetAssetCMD(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	assets.PrintAsset(asset)
+	assets.PrintAsset(getAssetTokenAddress, asset, output)
 }
 
 func init() {

@@ -35,7 +35,7 @@ func runGetCollectionCMD(cmd *cobra.Command, args []string) {
 		os.Exit(1)
 	}
 
-	collections.PrintCollection(collection)
+	collections.PrintCollection(collection, output)
 }
 
 func init() {
