@@ -14,7 +14,6 @@ var (
 	listOrdersAuxiliaryFeeRecipients  string
 	listOrdersBuyAssetID              string
 	listOrdersBuyMaxQuantity          string
-	listOrdersBuyMetadata             []string
 	listOrdersBuyMinQuantity          string
 	listOrdersBuyTokenAddress         string
 	listOrdersBuyTokenID              string
@@ -28,7 +27,6 @@ var (
 	listOrdersPageSize                int
 	listOrdersSellAssetID             string
 	listOrdersSellMaxQuantity         string
-	listOrdersSellMetadata            []string
 	listOrdersSellMinQuantity         string
 	listOrdersSellTokenAddress        string
 	listOrdersSellTokenID             string
