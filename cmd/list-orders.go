@@ -14,7 +14,7 @@ var (
 	listOrdersAuxiliaryFeeRecipients  string
 	listOrdersBuyAssetID              string
 	listOrdersBuyMaxQuantity          string
-	listOrdersBuyMetadata             string
+	listOrdersBuyMetadata             []string
 	listOrdersBuyMinQuantity          string
 	listOrdersBuyTokenAddress         string
 	listOrdersBuyTokenID              string
@@ -28,7 +28,7 @@ var (
 	listOrdersPageSize                int
 	listOrdersSellAssetID             string
 	listOrdersSellMaxQuantity         string
-	listOrdersSellMetadata            string
+	listOrdersSellMetadata            []string
 	listOrdersSellMinQuantity         string
 	listOrdersSellTokenAddress        string
 	listOrdersSellTokenID             string
@@ -61,7 +61,6 @@ func runListOrdersCMD(cmd *cobra.Command, args []string) {
 		AuxiliaryFeeRecipients:  listOrdersAuxiliaryFeeRecipients,
 		BuyAssetID:              listOrdersBuyAssetID,
 		BuyMaxQuantity:          listOrdersBuyMaxQuantity,
-		BuyMetadata:             listOrdersBuyMetadata,
 		BuyMinQuantity:          listOrdersBuyMinQuantity,
 		BuyTokenAddress:         listOrdersBuyTokenAddress,
 		BuyTokenID:              listOrdersBuyTokenID,
@@ -75,7 +74,6 @@ func runListOrdersCMD(cmd *cobra.Command, args []string) {
 		PageSize:                listOrdersPageSize,
 		SellAssetID:             listOrdersSellAssetID,
 		SellMaxQuantity:         listOrdersSellMaxQuantity,
-		SellMetadata:            listOrdersSellMetadata,
 		SellMinQuantity:         listOrdersSellMinQuantity,
 		SellTokenAddress:        listOrdersSellTokenAddress,
 		SellTokenID:             listOrdersSellTokenID,
@@ -85,6 +83,20 @@ func runListOrdersCMD(cmd *cobra.Command, args []string) {
 		UpdatedMaxTimestamp:     listOrdersUpdatedMaxTimestamp,
 		UpdatedMinTimestamp:     listOrdersUpdatedMinTimestamp,
 		User:                    listOrdersUser,
+	}
+
+	buyMetadata, err := cmd.Flags().GetStringArray("buy-metadata")
+	if err != nil {
+		log.Debugf("unable to parse buy metadata: %v\n", err)
+	} else {
+		cfg.BuyMetadata = jsonEncodeMetadata(buyMetadata)
+	}
+
+	sellMetadata, err := cmd.Flags().GetStringArray("sell-metadata")
+	if err != nil {
+		log.Debugf("unable to parse sell metadata: %v\n", err)
+	} else {
+		cfg.SellMetadata = jsonEncodeMetadata(sellMetadata)
 	}
 
 	result, err := client.ListOrders(context.Background(), cfg)
@@ -104,7 +116,7 @@ func init() {
 	listOrdersCmd.Flags().StringVar(&listOrdersAuxiliaryFeeRecipients, "auxiliary-fee-recipients", "", "Comma separated string of fee recipients that are to be paired with auxiliary_fee_percentages")
 	listOrdersCmd.Flags().StringVar(&listOrdersBuyAssetID, "buy-asset-id", "", "Internal IMX ID of the asset this order buys")
 	listOrdersCmd.Flags().StringVar(&listOrdersBuyMaxQuantity, "buy-max-quantity", "", "Max quantity for the asset this order buys")
-	listOrdersCmd.Flags().StringVar(&listOrdersBuyMetadata, "buy-metadata", "", "repeatable key=value formatted metadata filters for the asset this order buys")
+	listOrdersCmd.Flags().StringArray("buy-metadata", nil, "case-sensitive repeatable key=value formatted metadata filters for the asset this order buys")
 	listOrdersCmd.Flags().StringVar(&listOrdersBuyMinQuantity, "buy-min-quantity", "", "Min quantity for the asset this order buys")
 	listOrdersCmd.Flags().StringVar(&listOrdersBuyTokenAddress, "buy-token-address", "", "Token address of the asset this order buys")
 	listOrdersCmd.Flags().StringVar(&listOrdersBuyTokenID, "buy-token-id", "", "ERC721 Token ID of the asset this order buys")
@@ -118,7 +130,7 @@ func init() {
 	listOrdersCmd.Flags().IntVar(&listOrdersPageSize, "page-size", 20, "Page size of the result. Unofficial: if page-size is zero, all orders will be returned. Will attempt to retrive more pages up to the desired size.")
 	listOrdersCmd.Flags().StringVar(&listOrdersSellAssetID, "sell-asset-id", "", "Internal IMX ID of the asset this order sells")
 	listOrdersCmd.Flags().StringVar(&listOrdersSellMaxQuantity, "sell-max_quantity", "", "Max quantity for the asset this order sells")
-	listOrdersCmd.Flags().StringVar(&listOrdersSellMetadata, "sell-metadata", "", "repeatable key=value formatted metadata filters for the asset this order sells")
+	listOrdersCmd.Flags().StringArray("sell-metadata", nil, "case-sensitive repeatable key=value formatted metadata filters for the asset this order sells")
 	listOrdersCmd.Flags().StringVar(&listOrdersSellMinQuantity, "sell_min-quantity", "", "Min quantity for the asset this order sells")
 	listOrdersCmd.Flags().StringVar(&listOrdersSellTokenAddress, "sell-token-address", "", "Token address of the asset this order sells")
 	listOrdersCmd.Flags().StringVar(&listOrdersSellTokenID, "sell-token-id", "", "ERC721 Token ID of the asset this order sells")
