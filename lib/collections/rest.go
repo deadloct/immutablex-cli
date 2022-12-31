@@ -44,6 +44,7 @@ func (c *RESTClient) GetCollection(ctx context.Context, collection string) (*api
 
 	log.Debugf("fetching collection %s", collection)
 	url := c.url + GetCollectionEndpoint + "/" + collection
+	log.Debugf("Requesting getCollection: %v", url)
 	resp, err := c.client.Get(url)
 	if err != nil {
 		return nil, err
@@ -61,6 +62,7 @@ func (c *RESTClient) GetCollection(ctx context.Context, collection string) (*api
 
 func (c *RESTClient) ListCollections(ctx context.Context, cfg *ListCollectionsConfig) ([]api.Collection, error) {
 	url := c.getListCollectionsURL(cfg)
+	log.Debug("Requesting listCollections: %s", url)
 	resp, err := c.client.Get(url)
 	if err != nil {
 		return nil, err

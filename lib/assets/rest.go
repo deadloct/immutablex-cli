@@ -48,6 +48,7 @@ func (c *RESTClient) GetAsset(ctx context.Context, tokenAddress, tokenID string,
 
 	log.Debugf("fetching asset id %s from collection %s (with fees:%b)", tokenAddress, tokenID, includeFees)
 	url := strings.Join([]string{c.url + GetAssetEndpoint, tokenAddress, tokenID}, "/")
+	log.Debugf("Requesting getAsset: %v", url)
 	resp, err := c.client.Get(url)
 	if err != nil {
 		return nil, err
@@ -65,6 +66,7 @@ func (c *RESTClient) GetAsset(ctx context.Context, tokenAddress, tokenID string,
 
 func (c *RESTClient) ListAssets(ctx context.Context, cfg ListAssetsConfig) ([]api.AssetWithOrders, error) {
 	url := c.getListAssetsURL(cfg)
+	log.Debugf("Requesting listAssets: %v", url)
 	getResp, err := c.client.Get(url)
 	if err != nil {
 		return nil, err

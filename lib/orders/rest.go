@@ -37,6 +37,7 @@ func (c *RESTClient) GetOrder() (api.Order, error) { return api.Order{}, nil }
 
 func (c *RESTClient) ListOrders(ctx context.Context, cfg *ListOrdersConfig) ([]api.Order, error) {
 	url := c.getListOrdersURL(cfg)
+	log.Debug("Requesting listOrders: %s", url)
 	resp, err := c.client.Get(url)
 	if err != nil {
 		return nil, err
