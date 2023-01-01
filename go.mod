@@ -3,7 +3,7 @@ module github.com/deadloct/immutablex-cli
 go 1.18
 
 require (
-	github.com/immutable/imx-core-sdk-golang v0.2.2
+	github.com/deadloct/immutablex-go-lib v0.0.0-20230101020234-44b9907e4a6f
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.6.1
 )
@@ -17,6 +17,7 @@ require (
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
+	github.com/immutable/imx-core-sdk-golang v0.2.2 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/rjeczalik/notify v0.9.2 // indirect
 	github.com/shirou/gopsutil v3.21.11+incompatible // indirect

@@ -4,7 +4,7 @@ import (
 	"context"
 	"os"
 
-	"github.com/deadloct/immutablex-cli/lib/assets"
+	"github.com/deadloct/immutablex-go-lib/assets"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
